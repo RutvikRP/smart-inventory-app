@@ -1,4 +1,8 @@
 spring:
+  security:
+    user:
+      name: admin
+      password: admin
   datasource:
     url: jdbc:postgresql://127.0.0.1:5434/smart_inventory?currentSchema=public&TimeZone=Asia/Kolkata
     username: smartuser
@@ -13,7 +17,3 @@ spring:
       hibernate:
         format_sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-
-logging:
-  level:
-    com.zaxxer.hikari: DEBUG
