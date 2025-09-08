@@ -1,5 +1,6 @@
 package com.smartinventory.inventory.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,11 +12,11 @@ public record ProductRequestDTO(
         String name,
 
         @NotNull(message = "Quantity is required")
-        @Min(value = 0, message = "Quantity must be >= 0")
+        @DecimalMin(value = "0.00", message = "Quantity must be >= 0")
         BigDecimal quantity,
 
         @NotNull(message = "Price is required")
-        @Min(value = 0, message = "Price must be >= 0")
+        @DecimalMin(value = "0.00", message = "Price must be >= 0")
         BigDecimal price,
 
         @NotBlank(message = "SKU is required")

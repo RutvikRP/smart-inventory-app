@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -40,12 +41,16 @@ public class ProductService {
         return productRepository.findByNameContainingIgnoreCase(keyword).stream().map(this::mapToResponseDTO).toList();
     }
 
-    public void deleteProduct(long id) {
-        if (!productRepository.existsById(id)) {
-            throw new ProductNotFoundException("Product with id " + id + " not found");
-        }
-        productRepository.deleteById(id);
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id " + id));
+
+        product.setActive(false);
+        product.setDeletedAt(LocalDateTime.now());
+
+        productRepository.save(product);
     }
+
 
     public ProductResponseDTO updateProduct(long id,ProductRequestDTO productRequestDTO) {
         Product product = productRepository.findById(id).orElseThrow(()->new ProductNotFoundException("Product with id " + id + " not found"));
@@ -83,4 +88,14 @@ public class ProductService {
                 product.getCreatedAt(),
                 product.getUpdatedAt());
     }
+    public void restoreProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException("Product not found with id " + id));
+
+        product.setActive(true);
+        product.setDeletedAt(null);
+
+        productRepository.save(product);
+    }
+
 }

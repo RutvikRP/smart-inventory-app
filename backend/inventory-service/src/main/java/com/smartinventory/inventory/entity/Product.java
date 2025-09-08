@@ -3,6 +3,7 @@ package com.smartinventory.inventory.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Where(clause = "active = true")
 @EntityListeners(AuditingEntityListener.class) //  Enables auditing
 public class Product {
 
@@ -55,4 +57,10 @@ public class Product {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
+    @Column(nullable = false)
+    private boolean active = true;  // Default: active
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
 }
