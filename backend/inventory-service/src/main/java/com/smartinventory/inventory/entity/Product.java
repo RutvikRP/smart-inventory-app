@@ -42,7 +42,7 @@ public class Product {
 
     @Column(nullable = false)
     @Min(value = 0, message = "Quantity must be >= 0")
-    private BigDecimal quantity;
+    private BigDecimal quantity=BigDecimal.ZERO;
 
     @Column(length = 500)
     private String description;
@@ -62,5 +62,8 @@ public class Product {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+    // optimistic locking for quantity updates
+    @Version
+    private Long version;
 
 }

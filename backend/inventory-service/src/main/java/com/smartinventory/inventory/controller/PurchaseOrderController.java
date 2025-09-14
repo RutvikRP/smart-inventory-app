@@ -5,6 +5,7 @@ import com.smartinventory.inventory.dto.PurchaseOrderResponseDTO;
 import com.smartinventory.inventory.service.PurchaseOrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +35,8 @@ public class PurchaseOrderController {
 
     // Get all POs
     @GetMapping
-    public ResponseEntity<List<PurchaseOrderResponseDTO>> getAllPurchaseOrders() {
-        return ResponseEntity.ok(purchaseOrderService.getAllPurchaseOrders());
+    public ResponseEntity<List<PurchaseOrderResponseDTO>> getAllPurchaseOrders(Pageable pageable) {
+        return ResponseEntity.ok(purchaseOrderService.getAllPurchaseOrders(pageable));
     }
 
     // Confirm PO

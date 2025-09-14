@@ -11,7 +11,5 @@ public record PurchaseOrderRequestDTO(
         @NotNull(message = "Supplier ID is required")
         long supplierId,
         @Valid
-        List<PurchaseOrderLine> productLines
-){
-
-}
+        List<PurchaseOrderLineRequestDTO> productLines
+) { }

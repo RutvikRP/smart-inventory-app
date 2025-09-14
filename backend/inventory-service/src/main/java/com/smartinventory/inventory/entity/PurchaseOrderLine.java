@@ -38,4 +38,11 @@ public class PurchaseOrderLine {
 
     @Column(precision = 15, scale = 2)
     private BigDecimal subtotal;
+    // NEW: received tracking
+    @Column(nullable = false, precision = 15, scale = 4)
+    private BigDecimal receivedQuantity = BigDecimal.ZERO;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private LineStatus lineStatus = LineStatus.PENDING;
 }

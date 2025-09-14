@@ -71,12 +71,16 @@ public class SupplierService {
                     switch (k) {
                         case "name":
                             supplier.setName(v);
+                            break;
                         case "email":
                             supplier.setEmail(v);
+                            break;
                         case "phone":
                             supplier.setPhone(v);
+                            break;
                         case "address":
                             supplier.setAddress(v);
+                            break;
                         default:
                             throw new IllegalArgumentException("Field " + k + " not supported");
 
@@ -84,5 +88,10 @@ public class SupplierService {
                 }
         );
         return entityToDto(supplierRepository.save(supplier));
+    }
+
+    public void deleteSupplier(long id) {
+        supplierRepository.findById(id).orElseThrow(()->new SupplierNotFoundException("Supplier not found for id : "+id));
+        supplierRepository.deleteById(id);
     }
 }

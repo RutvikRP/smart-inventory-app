@@ -5,9 +5,10 @@ import java.util.List;
 
 public record PurchaseOrderResponseDTO(
         Long id,
+        String orderNumber,
         Long supplierId,
         LocalDateTime orderDate,
-        String status,
+        String orderStatus,
         List<PurchaseOrderLineResponseDTO> lines
-) {
-}
+) { }
+

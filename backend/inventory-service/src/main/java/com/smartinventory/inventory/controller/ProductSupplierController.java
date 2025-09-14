@@ -23,5 +23,21 @@ public class ProductSupplierController {
     public ResponseEntity<List<ProductSupplierResponseDTO>> getSuppliersForProduct(@PathVariable Long id){
         return ResponseEntity.ok(productSupplierService.getSuppliersForProduct(id));
     }
+    @GetMapping("/supplier/{supplierId}")
+    public ResponseEntity<List<ProductSupplierResponseDTO>> getProductsForSupplier(@PathVariable Long supplierId) {
+        return ResponseEntity.ok(productSupplierService.getProductsForSupplier(supplierId));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ProductSupplierResponseDTO> updateProductSupplier(@PathVariable Long id,
+                                                                            @RequestBody ProductSupplierRequestDTO dto) {
+        return ResponseEntity.ok(productSupplierService.updateProductSupplier(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProductSupplier(@PathVariable Long id) {
+        productSupplierService.deleteProductSupplier(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }

@@ -12,105 +12,80 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // Handle validation errors (@Valid in DTOs)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(
-            MethodArgumentNotValidException ex,
-            HttpServletRequest request
+    // ✅ Reusable method to build ErrorResponse
+    private ResponseEntity<ErrorResponse> buildErrorResponse(
+            HttpStatus status, String error, String message, HttpServletRequest request
     ) {
-        String message = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         ErrorResponse errorResponse = new ErrorResponse(
                 LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Validation Failed",
+                status.value(),
+                error,
                 message,
                 request.getRequestURI()
         );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        return ResponseEntity.status(status).body(errorResponse);
     }
 
-    // Handle duplicate SKU
-    @ExceptionHandler(DuplicateSkuException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicateSku(
-            DuplicateSkuException ex,
-            HttpServletRequest request
+    // ✅ Validation errors
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationExceptions(
+            MethodArgumentNotValidException ex, HttpServletRequest request
     ) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.CONFLICT.value(),
-                "Duplicate SKU",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+        String message = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Validation Failed", message, request);
     }
 
-    // Handle invalid UOM
-    @ExceptionHandler(InvalidUnitOfMeasureException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidUOM(
-            InvalidUnitOfMeasureException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.BAD_REQUEST.value(),
-                "Invalid Unit of Measure",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
-    }
-
-    // Handle product not found
+    // ✅ Product-specific
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleProductNotFound(
-            ProductNotFoundException ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "Product Not Found",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    public ResponseEntity<ErrorResponse> handleProductNotFound(ProductNotFoundException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "Product Not Found", ex.getMessage(), request);
     }
+
+    @ExceptionHandler(DuplicateSkuException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateSku(DuplicateSkuException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.CONFLICT, "Duplicate SKU", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidUnitOfMeasureException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidUOM(InvalidUnitOfMeasureException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Unit of Measure", ex.getMessage(), request);
+    }
+
+    // ✅ Supplier-specific
     @ExceptionHandler(SupplierNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handelSupplierNotFoundException(Exception ex,HttpServletRequest request){
-        ErrorResponse errorResponse=new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "Product Not Found",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    public ResponseEntity<ErrorResponse> handleSupplierNotFound(SupplierNotFoundException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "Supplier Not Found", ex.getMessage(), request);
     }
+
     @ExceptionHandler(DuplicateSupplierException.class)
-    public ResponseEntity<ErrorResponse> handelDuplicateSupplierException(Exception ex,HttpServletRequest request){
-        ErrorResponse errorResponse=new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.NOT_FOUND.value(),
-                "Duplicate Supplier",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    public ResponseEntity<ErrorResponse> handleDuplicateSupplier(DuplicateSupplierException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.CONFLICT, "Duplicate Supplier", ex.getMessage(), request);
     }
-    // Fallback for unexpected exceptions
+
+    // ✅ Purchase Order-specific
+    @ExceptionHandler(PurchaseOrderNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePoNotFound(PurchaseOrderNotFoundException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, "Purchase Order Not Found", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidSupplierProductRelationException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidSupplierProduct(InvalidSupplierProductRelationException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Supplier-Product Relation", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(DuplicateLineItemException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateLine(DuplicateLineItemException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.CONFLICT, "Duplicate Line Item", ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(InvalidOrderStateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidOrderState(InvalidOrderStateException ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, "Invalid Order State", ex.getMessage(), request);
+    }
+
+    // ✅ Generic fallback
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(
-            Exception ex,
-            HttpServletRequest request
-    ) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                LocalDateTime.now(),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal Server Error",
-                ex.getMessage(),
-                request.getRequestURI()
-        );
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", ex.getMessage(), request);
     }
 }

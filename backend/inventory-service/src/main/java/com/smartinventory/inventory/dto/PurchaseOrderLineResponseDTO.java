@@ -5,8 +5,9 @@ import java.math.BigDecimal;
 public record PurchaseOrderLineResponseDTO(
         long id,
         long productId,
-        BigDecimal quantity,
-        BigDecimal price
+        BigDecimal quantity,         // ordered qty
+        BigDecimal price,            // unit price
+        BigDecimal receivedQuantity, // how much received so far
+        String lineStatus            // PENDING / PARTIALLY_RECEIVED / RECEIVED
+) { }
 
-) {
-}

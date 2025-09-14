@@ -6,6 +6,8 @@ import com.smartinventory.inventory.service.SupplierService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,5 +40,10 @@ public class SupplierController {
     public ResponseEntity<SupplierResponseDTO> updateSomeField(@PathVariable Long id, @RequestBody Map<String,String> updateMap){
         SupplierResponseDTO supplierResponseDTO=supplierService.updateSomeField(id,updateMap);
         return  ResponseEntity.ok(supplierResponseDTO);
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSupplier(@PathVariable long id){
+        supplierService.deleteSupplier(id);
+        return ResponseEntity.noContent().build();
     }
 }
