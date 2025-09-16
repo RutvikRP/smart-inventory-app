@@ -1,0 +1,69 @@
+@startuml
+!theme plain
+
+class Product {
+  Long id
+  String name
+  BigDecimal quantity
+  BigDecimal price
+  String sku
+  String uom
+  String description
+}
+
+class Supplier {
+  Long id
+  String name
+  String email
+  String phone
+  String address
+}
+
+class ProductSupplier {
+  Long id
+  BigDecimal supplierPrice
+  Integer leadTimeDays
+  Boolean preferredSupplier
+}
+
+class PurchaseOrder {
+  Long id
+  LocalDateTime orderDate
+  OrderStatus status
+}
+
+class PurchaseOrderLine {
+  Long id
+  BigDecimal quantity
+  BigDecimal price
+}
+
+class StockMovement {
+  Long id
+  MovementType type
+  BigDecimal quantity
+  LocalDateTime movementDate
+}
+
+enum OrderStatus {
+  DRAFT
+  ORDERED
+  RECEIVED
+  CANCELLED
+}
+
+enum MovementType {
+  INBOUND
+  OUTBOUND
+}
+
+' Relationships
+Product "1" -- "many" ProductSupplier
+Supplier "1" -- "many" ProductSupplier
+
+PurchaseOrder "1" -- "many" PurchaseOrderLine
+Supplier "1" -- "many" PurchaseOrder
+Product "1" -- "many" PurchaseOrderLine
+
+PurchaseOrderLine "1" -- "many" StockMovement
+@enduml

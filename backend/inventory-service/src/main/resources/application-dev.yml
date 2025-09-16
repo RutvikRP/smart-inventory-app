@@ -1,8 +1,13 @@
 spring:
   security:
-    user:
-      name: admin
-      password: admin
+#    user:
+#      name: admin
+#      password: admin
+    jwt:
+#      secret:  ${JWT_SECRET_BASE64:REPLACE_WITH_BASE64_SECRET}
+      secret:  RMuSxttrzcsPux+Gl04Npu+/chixYAqQ45gp5O1+sWc=
+      access-exp-ms: 900000     # 15 minutes
+      refresh-exp-ms: 1209600000 # 14 days
   datasource:
     url: jdbc:postgresql://127.0.0.1:5434/smart_inventory?currentSchema=public&TimeZone=Asia/Kolkata
     username: smartuser
