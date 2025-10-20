@@ -1,0 +1,13 @@
+// components/layout/navbar/navbar.component.scss
+.nav-link {
+  &.active {
+    background-color: var(--color-primary-600) !important;
+    color: var(--color-text-inverse) !important;
+    box-shadow: var(--shadow-sm);
+  }
+
+  &:not(.active):hover {
+    background-color: var(--color-primary-50);
+    color: var(--color-primary-600);
+  }
+}

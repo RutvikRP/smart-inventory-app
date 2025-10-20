@@ -1,0 +1,32 @@
+.table-row {
+  &.selected {
+    background-color: var(--color-primary-50) !important;
+  }
+
+  transition: background-color var(--transition-fast);
+}
+
+// Responsive table
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 800px;
+  }
+}
+
+// Smooth animations
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -22,7 +22,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponseDTO> addProduct(@Valid @RequestBody ProductRequestDTO productDTO) {
-        return ResponseEntity.ok(productService.addProduct(productDTO));
+                    return ResponseEntity.ok(productService.addProduct(productDTO));
     }
 
     @GetMapping("/{id}")

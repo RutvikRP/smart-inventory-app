@@ -21,8 +21,8 @@ public class JwtUtils {
     private final long accessTokenValidityMs;
     private final long refreshTokenValidityMs;
 
-    public JwtUtils(@Value("${security.jwt.secret}") String secret, @Value("${security.jwt.access-exp-ms}") long accessMs,
-                    @Value("${security.jwt.refresh-exp-ms}") long refreshMs) {
+    public JwtUtils(@Value("${spring.security.jwt.secret}") String secret, @Value("${spring.security.jwt.access-exp-ms}") long accessMs,
+                    @Value("${spring.security.jwt.refresh-exp-ms}") long refreshMs) {
         this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secret));
         this.accessTokenValidityMs = accessMs;
         this.refreshTokenValidityMs = refreshMs;
